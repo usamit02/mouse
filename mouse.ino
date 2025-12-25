@@ -2,7 +2,7 @@
 #define joyX_PIN  4    // X軸(横軸)
 #define joyY_PIN  2    // 7軸(縦軸)
 #define joySw_PIN 5    // スイッチ
-int xx = 0, yy = 0, sww;
+int xx = 0, yy = 0, sww = 0;
 int posX = 90, posY, center = 0;
 int input;
 int count = 0;
@@ -22,9 +22,14 @@ void loop() {
   int joySw = digitalRead(joySw_PIN);
   if (bleMouse.isConnected()) {
     if (joySw == 1) {    // スイッチを離したとき
-      // Serial.println("OFF");
-    } else {    // スイッチを押したとき
-      bleMouse.click(MOUSE_LEFT);
+      if (sww == 1) {
+        bleMouse.release();
+        sww = 0;
+        Serial.println("ON");
+      }
+    } else if (sww == 0) {    // スイッチを押したとき
+      bleMouse.press();
+      sww = 1;
       Serial.println("ON");
     }
     int x, y, centerX = 2340, centerY = 2754;
